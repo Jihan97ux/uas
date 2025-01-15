@@ -8,14 +8,17 @@ use App\Jawaban\NomorSatu;
 class AuthController extends Controller {
 
     public function auth (Request $request) {
-
         $nomorSatu = new NomorSatu();
         return $nomorSatu->auth($request);
     }
 
     public function logout (Request $request) {
-
         $nomorSatu = new NomorSatu();
         return $nomorSatu->logout($request);
+    }
+
+    public function register (Request $request) {
+        $nomorSatu = new NomorSatu();
+        return $nomorSatu->register($request);
     }
 }
