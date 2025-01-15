@@ -3,23 +3,38 @@
 namespace App\Jawaban;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class NomorSatu {
 
-	public function auth (Request $request) {
+    public function auth(Request $request) {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
 
-		// Tuliskan code untuk proses login dengan menggunakan email/username dan password
+        $user = User::where('email', $request->email)
+                    ->orWhere('username', $request->email)
+                    ->first();
 
-		return redirect()->route('event.home');
-	}
+        if (!$user || $request->password !== $user->password){
+            return redirect()->back()->withErrors(['login' => 'Invalid email or password']);
+        }
 
-	public function logout (Request $request) {
+        Auth::login($user);
 
-		// Tuliskan code untuk menangani proses logout
-        
         return redirect()->route('event.home');
-	}
-}
+    }
 
-?>
+    public function logout(Request $request) {
+
+        Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('event.home');
+    }
+}

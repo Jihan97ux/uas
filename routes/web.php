@@ -15,7 +15,6 @@ use App\Http\Controllers\SchedulerController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
 Route::post('auth', [AuthController::class, 'auth'])->name('auth');
 Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 
