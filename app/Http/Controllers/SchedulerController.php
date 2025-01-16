@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Event;
 use Illuminate\Http\Request;
 use App\Jawaban\NomorDua;
 use App\Jawaban\NomorTiga;
 use App\Jawaban\NomorEmpat;
+use Illuminate\Support\Facades\Auth;
 
 class SchedulerController extends Controller {
 
@@ -15,7 +17,7 @@ class SchedulerController extends Controller {
         $events = $nomorTiga->getData();
 
         return view('home.index', compact('events'));
-    }
+    }    
 
     public function submit (Request $request) {
 
@@ -23,11 +25,10 @@ class SchedulerController extends Controller {
         return $nomorDua->submit($request);
     }
 
-    public function getJson () {
-
+    public function getJson() {
         $nomorEmpat = new NomorEmpat();
-        return $nomorEmpat->getJson(); 
-    }
+        return $nomorEmpat->getJson();
+    }     
 
     public function getSelectedData (Request $request) {
 

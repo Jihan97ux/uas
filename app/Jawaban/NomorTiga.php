@@ -8,30 +8,46 @@ use App\Models\Event;
 
 class NomorTiga {
 
-	public function getData () {
-		$data = Event::where('user_id', Auth::id())->get();
-		$data = [];
-		return $data;
-	}
+    public function getData() {
+        $data = Event::where('user_id', Auth::id())->get();  // Ambil semua events berdasarkan user_id
+        return $data;
+    }
 
-	public function getSelectedData (Request $request) {
+    public function getSelectedData(Request $request) {
+        $data = Event::find($request->id);  // Ambil data berdasarkan ID
+        return response()->json($data);   // Kirim data JSON jika ditemukan
+    }
 
-		// Tuliskan code mengambil 1 data jadwal user dengan id jadwal, simpan di variabel $data 
-		$data = [];
-		return response()->json($data);
-	}
+    public function update(Request $request) {
+        $request->validate([
+            'id' => 'required|exists:events,id',
+            'name' => 'required|string|max:255',
+            'start' => 'required|date|after_or_equal:today',
+            'end' => 'required|date|after:start',
+        ]);
 
-	public function update (Request $request) {
+        $event = Event::find($request->id);
 
-		// Tuliskan code mengupdate 1 jadwal
-		return redirect()->route('event.home');
-	}
+		echo $event;
 
-	public function delete (Request $request) {
+        if ($event) {
+            $event->update([
+                'name' => $request->name,
+                'start' => $request->start,
+                'end' => $request->end,
+            ]);
+        }
 
-		// Tuliskan code menghapus 1 jadwal
-		return redirect()->route('event.home');
-	}
+        return redirect()->route('event.home')->with('success', 'Event berhasil diperbarui');
+    }
+
+    public function delete(Request $request) {
+        $event = Event::find($request->id);
+
+        if ($event) {
+            $event->delete();
+        }
+
+        return redirect()->route('event.home')->with('success', 'Event berhasil dihapus');
+    }
 }
-
-?>
